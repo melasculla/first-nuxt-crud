@@ -7,15 +7,7 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-   middleware: [
-      async (to, from) => {
-         console.warn('clown');
-      }
-   ]
-})
-
-const test = useState<User | null>('currentUser')
+const { data: test } = await useFetch('/api/currentUser')
 </script>
 
 <style scoped>

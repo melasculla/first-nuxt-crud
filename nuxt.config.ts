@@ -35,23 +35,17 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    '/upload': {
-      prerender: true,
+    '/': {
+      prerender: true
     },
     '/posts': {
       prerender: true,
-      isr: true,
+      cache: { maxAge: 30 }
     },
     '/posts/**': {
       prerender: true,
     },
     '/user/**': {
-      prerender: true,
-    },
-    '/login': {
-      prerender: true,
-    },
-    '/signup': {
       prerender: true,
     },
   },

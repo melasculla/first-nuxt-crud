@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-const posts = await $fetch('/api/posts')
+const { data: posts } = await useFetch('/api/posts')
 </script>
 
 <style scoped></style>

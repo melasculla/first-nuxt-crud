@@ -1,17 +1,8 @@
-import type { H3Event, EventHandlerRequest } from 'h3'
-
 export const useAuth = () => {
    const token = useCookie('auth');
    const refreshCookieToken = useCookie('refresh');
    const user = useState<User | null>('currentUser');
    const loggedIn = computed(() => user.value !== null);
-
-   const loadUser = async (event: H3Event<EventHandlerRequest>) => {
-      // const currentUser = await event.context.user
-      // useState<User | null>('currentUser', () => {
-      //    return currentUser || null
-      // })
-   }
 
    const signup = async (name: string, password: string) => {
       try {
@@ -33,7 +24,6 @@ export const useAuth = () => {
             body: { name, password }
          })
 
-         localStorage.setItem('user', JSON.stringify(data))
          user.value = data as User
 
          return data
@@ -49,7 +39,6 @@ export const useAuth = () => {
       try {
          await $fetch('/api/logout')
          user.value = null
-         localStorage.removeItem('user')
          router.push('/')
       } catch (error) {
          console.warn('Failed to logout: ', error)
@@ -73,8 +62,7 @@ export const useAuth = () => {
          } catch (error: any) { }
       }
       user.value = null
-      localStorage.removeItem('user')
    }
 
-   return { loggedIn, user, loadUser, signup, login, logout, checkAuthCookie }
+   return { loggedIn, user, signup, login, logout, checkAuthCookie }
 }

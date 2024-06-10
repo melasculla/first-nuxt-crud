@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken"
 export default async (event: H3Event<EventHandlerRequest>, token: string, refresh: boolean = false) => {
    try {
       if (refresh) {
-         const { id } = jwt.verify(token, event.context.secret) as User
-         const user = await userModel().getUser(id);
-         event.context.user = user
+         const { id: jwtID } = jwt.verify(token, event.context.secret) as User
+         const { id, name, role } = await userModel().getUser(jwtID);
+         event.context.user = { id, name, role }
       } else {
          const { id, name, role } = jwt.verify(token, event.context.secret) as User
          event.context.user = { id, name, role }

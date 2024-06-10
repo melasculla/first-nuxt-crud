@@ -6,7 +6,7 @@
          <input class="rounded-3xl px-4 py-2 outline-none focus:ring-4 ring-offset-2 ring-yellow-700 w-full" type="text"
             name="name" v-model="name" placeholder="Name" />
          <div>
-            <button @click="removeUser"
+            <button type="button" @click="removeUser"
                class="text-black rounded-3xl px-12 py-3 bg-red-600 text-2xl uppercase hover:bg-white transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:grayscale filter">Remove
                User</button>
             <transition name="error">

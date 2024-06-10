@@ -12,7 +12,7 @@ export default defineEventHandler(async event => {
    } else if (token) {
       deleteCookie(event, 'auth')
    }
-
+   console.warn(event.context.user, event.path)
    const protectedRoutes: string[] = [
       '/api/logout',
       '/api/user/',

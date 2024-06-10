@@ -35,7 +35,11 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    '/gallery': {
+    '/upload': {
+      prerender: true,
+      swr: true
+    },
+    '/posts': {
       swr: true
     },
     '/login': {

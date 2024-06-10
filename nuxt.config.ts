@@ -36,10 +36,9 @@ export default defineNuxtConfig({
   ssr: true,
   routeRules: {
     '/': {
-      prerender: true
+      cache: { maxAge: 60 }
     },
     '/posts': {
-      prerender: true,
       cache: { maxAge: 30 }
     },
     '/posts/**': {

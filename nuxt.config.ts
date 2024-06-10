@@ -37,18 +37,22 @@ export default defineNuxtConfig({
   routeRules: {
     '/upload': {
       prerender: true,
-      swr: true
     },
     '/posts': {
-      swr: true
+      prerender: true,
+      isr: true,
+    },
+    '/posts/**': {
+      prerender: true,
+    },
+    '/user/**': {
+      prerender: true,
     },
     '/login': {
       prerender: true,
-      swr: true
     },
     '/signup': {
       prerender: true,
-      swr: true
     },
   },
   hooks: {

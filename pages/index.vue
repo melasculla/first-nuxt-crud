@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-const { data: test } = await useFetch('/api/currentUser')
+const test = useState('currentUser')
 </script>
 
 <style scoped>

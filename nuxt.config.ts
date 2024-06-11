@@ -14,8 +14,8 @@ export default defineNuxtConfig({
     },
     storage: {
       test: {
-        driver: 'fs',
-        base: '.test'
+        driver: 'memory',
+        base: './test'
       }
     }
   },

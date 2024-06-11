@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     storage: {
       test: {
         driver: 'memory',
-        base: './test'
+        base: '.cache'
       }
     }
   },
@@ -41,18 +41,13 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    '/': {
-      cache: { maxAge: 60 }
-    },
-    '/posts': {
-      // cache: { maxAge: 30 }
-    },
     '/posts/**': {
       prerender: true,
       isr: true
     },
     '/user/**': {
       prerender: true,
+      isr: true
     },
   },
   hooks: {

@@ -11,6 +11,16 @@ export default defineNuxtConfig({
         './server/db',
         './server/models'
       ]
+    },
+    storage: {
+      users: {
+        driver: 'memory',
+        base: '.usersCache'
+      },
+      posts: {
+        driver: 'memory',
+        base: '.postsCache'
+      }
     }
   },
   devtools: { enabled: true },
@@ -39,12 +49,13 @@ export default defineNuxtConfig({
       cache: { maxAge: 60 }
     },
     '/posts': {
-      cache: { maxAge: 30 }
+      // cache: { maxAge: 30 }
     },
-    '/posts/**': {
+    '/posts/*': {
       prerender: true,
+      isr: true
     },
-    '/user/**': {
+    '/user/*': {
       prerender: true,
     },
   },

@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 
 export const userModel = () => {
-  const getUsers = async (): Promise<User[]> => {
-    return db.select().from(users)
+  const getUsers = async (): Promise<Omit<User, 'password'>[]> => {
+    return db.select({ id: users.id, name: users.name, role: users.role }).from(users)
   }
 
   const getUser = async (id: number): Promise<User> => {
@@ -20,10 +20,10 @@ export const userModel = () => {
     return newUser
   }
 
-  const updateUser = async (id: number, name: string, role?: Roles) => {
+  const updateUser = async (user: Omit<User, 'password'>) => {
     const [updatedUser] = await db.update(users)
-      .set({ name, role })
-      .where(eq(users.id, id))
+      .set({ name: user.name, role: user.role })
+      .where(eq(users.id, user.id))
       .returning({ id: users.id, name: users.name, role: users.role });
     return updatedUser
   }

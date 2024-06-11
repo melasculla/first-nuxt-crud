@@ -13,8 +13,8 @@ export default defineEventHandler(async (event) => {
 
    const publicUser = { name: user.name, id: user.id, role: user.role }
 
-   createToken(event, publicUser, event.context.accessExpires, 'auth')
-   createToken(event, { salt: (Math.random() * 1325), id: user.id }, event.context.refreshExpires, 'refresh')
+   await createToken(event, publicUser, event.context.accessExpires, 'auth')
+   await createToken(event, { salt: (Math.random() * 1325), id: user.id }, event.context.refreshExpires, 'refresh')
 
    return {
       id: user.id,

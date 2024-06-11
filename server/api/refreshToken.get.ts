@@ -1,5 +1,5 @@
-export default defineEventHandler((event) => {
+export default defineEventHandler(async event => {
    if (!event.context.loggedIn) return createError({ statusCode: 403, statusMessage: 'Unauthorized' })
-   createToken(event, event.context.user, event.context.accessExpires, 'auth')
+   await createToken(event, event.context.user, event.context.accessExpires, 'auth')
    return 'Token Refreshed'
 })

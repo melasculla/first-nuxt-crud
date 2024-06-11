@@ -1,13 +1,13 @@
 <template>
    <div class="bg-emerald-400 text-5xl text-red-400 p-4">
-      <form @submit.prevent="handleForm" class="grid grid-cols-2 gap-5 justify-items-center items-center">
+      <form @submit.prevent="handleForm" class="grid grid-cols-1 lg:grid-cols-2 gap-5 justify-items-center items-center">
          <input disabled class="rounded-3xl px-4 py-2 outline-none focus:ring-4 ring-offset-2 ring-yellow-700 w-full"
             type="text" name="id" v-model="id" placeholder="ID" />
          <input class="rounded-3xl px-4 py-2 outline-none focus:ring-4 ring-offset-2 ring-yellow-700 w-full" type="text"
             name="name" v-model="name" placeholder="Name" />
          <div>
             <button type="button" @click="removeUser"
-               class="text-black rounded-3xl px-12 py-3 bg-red-600 text-2xl uppercase hover:bg-white transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:grayscale filter">Remove
+               class="text-black rounded-3xl px-12 py-3 bg-red-600 text-base uppercase hover:bg-white transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:grayscale filter">Remove
                User</button>
             <transition name="error">
                <div class="text-center overflow-hidden max-h-12" v-if="removeError">
@@ -16,7 +16,7 @@
             </transition>
          </div>
          <button :disabled="isOldName ? true : false"
-            class="rounded-3xl px-12 py-3 bg-white text-2xl uppercase hover:bg-black transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:grayscale filter"
+            class="rounded-3xl px-12 py-3 bg-white text-base uppercase hover:bg-black transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:grayscale filter"
             type="submit">{{ isOldName ? 'Change name' : 'Update User' }}</button>
       </form>
    </div>

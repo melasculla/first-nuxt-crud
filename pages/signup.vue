@@ -51,7 +51,7 @@
 definePageMeta({
    middleware: [
       (to, from) => {
-         if (useAuth().loggedIn.value && !from.path.includes('signup')) return navigateTo('/')
+         if (useAuth().loggedIn.value) return navigateTo('/')
       }
    ]
 })

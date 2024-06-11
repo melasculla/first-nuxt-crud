@@ -14,11 +14,11 @@ export default defineNuxtConfig({
     },
     storage: {
       users: {
-        driver: 'memory',
+        driver: 'fs',
         base: '.usersCache'
       },
       posts: {
-        driver: 'memory',
+        driver: 'fs',
         base: '.postsCache'
       }
     }
@@ -51,11 +51,11 @@ export default defineNuxtConfig({
     '/posts': {
       // cache: { maxAge: 30 }
     },
-    '/posts/*': {
+    '/posts/**': {
       prerender: true,
       isr: true
     },
-    '/user/*': {
+    '/user/**': {
       prerender: true,
     },
   },

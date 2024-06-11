@@ -13,13 +13,9 @@ export default defineNuxtConfig({
       ]
     },
     storage: {
-      users: {
+      test: {
         driver: 'fs',
-        base: '.usersCache'
-      },
-      posts: {
-        driver: 'fs',
-        base: '.postsCache'
+        base: '.test'
       }
     }
   },

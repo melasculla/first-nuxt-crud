@@ -36,7 +36,7 @@
 <script setup lang="ts">
 definePageMeta({
    middleware: [
-      async (to, from) => {
+      (to, from) => {
          if (useAuth().loggedIn.value) return navigateTo('/')
       }
    ]
@@ -79,7 +79,9 @@ const handleForm = async (e: Event) => {
 
    try {
       await login(name.value, password.value)
-      router.push('/')
+
+      const route = useState<string | null>('desiredPath').value || '/'
+      router.push(route)
    } catch (error: any) {
       switch (error.statusCode) {
          case 404: errors.value.name = 'User not Found'

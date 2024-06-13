@@ -25,7 +25,7 @@
             </nav>
          </div>
       </header>
-      <div class="fixed top-30 left-10 text-orange-500 text-5xl z-10 filter drop-shadow-2xl font-black" v-if="loggedIn">
+      <div class="fixed bottom-20 right-10 text-orange-500 text-2xl z-10 filter drop-shadow-2xl font-black" v-if="loggedIn">
          Welcome, {{ user?.name }}
       </div>
    </div>

@@ -1,5 +1,5 @@
 <template>
-   <div class="bg-emerald-400 text-5xl text-red-400 p-4">
+   <div class="bg-emerald-400 text-2xl text-red-400 p-4">
       <form @submit.prevent="handleForm" class="grid grid-cols-1 lg:grid-cols-2 gap-5 justify-items-center items-center">
          <input disabled class="rounded-3xl px-4 py-2 outline-none focus:ring-4 ring-offset-2 ring-yellow-700 w-full"
             type="text" name="id" v-model="id" placeholder="ID" />
@@ -83,7 +83,6 @@ const removeUser = async ({ target }: Event) => {
       })
 
       await logout()
-      router.push('/')
    } catch (error: any) {
       let element = target as Element
 

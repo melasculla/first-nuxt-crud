@@ -1,6 +1,7 @@
 export const useAuth = () => {
    const user = useState<User | null>('currentUser');
    const loggedIn = computed(() => user.value !== null);
+   const sessionNotification = useState<boolean>('sessionNotification', () => false)
 
    const signup = async (name: string, password: string) => {
       try {
@@ -44,12 +45,19 @@ export const useAuth = () => {
    }
 
    const checkAuthCookie = async () => {
-      const token = useCookie('auth')
-      if (token.value) return
+      const accessToken = useCookie('auth')
+      const refreshToken = useCookie('refresh')
+      if (accessToken.value || refreshToken.value) return
 
+      if (user.value) renderNotification()
       user.value = null
-      // const data = await $fetch('/middleware/auth')
-      // console.log(data)
+   }
+
+   const renderNotification = () => {
+      sessionNotification.value = true
+      setTimeout(() => {
+         sessionNotification.value = false
+      }, 4000);
    }
 
    return { loggedIn, user, signup, login, logout, checkAuthCookie }

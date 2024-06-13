@@ -10,10 +10,12 @@ type UserSession = UserWithoutPassword & {
 }
 
 const config = useRuntimeConfig()
+const accessExpires = 60 * 10        // 10 mins
+const refreshExpires = 60 * 60 * 3   // 3 hour
 
 export const createAccessToken = async (event: H3Event<EventHandlerRequest>, payload: UserSession) => {
-   const token = jwt.sign(payload, config.accessJwtSecret, { expiresIn: event.context.accessExpires })
-   setCookie(event, 'auth', token, { maxAge: event.context.accessExpires, sameSite: 'strict' })
+   const token = jwt.sign(payload, config.accessJwtSecret, { expiresIn: accessExpires })
+   setCookie(event, 'auth', token, { maxAge: accessExpires, sameSite: 'strict' })
 
    return true
 }
@@ -33,12 +35,17 @@ export const verifyAccessToken = async (event: H3Event<EventHandlerRequest>, tok
 export const createRefreshToken = async (event: H3Event<EventHandlerRequest>, payload: UserSession) => {
    payload.salt = await bcrypt.genSalt(20);
 
-   const options = payload.exp ? undefined : { expiresIn: event.context.refreshExpires } as SignOptions | undefined
+   const options = payload.exp ? undefined : { expiresIn: refreshExpires } as SignOptions | undefined
    const token = jwt.sign(payload, config.refreshJwtSecret, options)
 
+   const now = Math.ceil(new Date().getTime() / 1000) // in seconds
+   const remainExparationTime = payload.exp ?
+      parseInt(payload.exp!) - now:
+      refreshExpires
+
    try {
-      await useStorage('redis:tokens').setItem(payload.id.toString(), token, { ttl: event.context.refreshExpires })
-      setCookie(event, 'refresh', token, { maxAge: event.context.refreshExpires, sameSite: 'strict', httpOnly: true })
+      await useStorage('redis:tokens').setItem(payload.id.toString(), token, { ttl: remainExparationTime })
+      setCookie(event, 'refresh', token, { maxAge: remainExparationTime, sameSite: 'strict' }) // httpOnly: true
 
       return true
    } catch (err: any) {
@@ -82,7 +89,6 @@ export const verifyRefreshToken = async (event: H3Event<EventHandlerRequest>) =>
       await createRefreshToken(event, user)
       return true
    } catch (err: any) {
-      // await useStorage('redis:tokens').removeItem(userID.toString())
       await removeUser(event, err)
    }
 

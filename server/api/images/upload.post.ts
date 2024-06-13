@@ -2,7 +2,6 @@ import { put } from "@vercel/blob";
 
 export default defineEventHandler(async event => {
    const formData = await readMultipartFormData(event)
-
    if (!formData) throw createError({ statusCode: 400, statusMessage: 'Invalid File(s)' })
 
    let result: string[] = []
@@ -14,19 +13,9 @@ export default defineEventHandler(async event => {
       try {
          const { url } = await put('images/' + filename!, data, { access: 'public' })
          result.push(url)
-      } catch (err: any) {
-         throw createError({ statusCode: err.status, statusMessage: err.message })
+      } catch (error: any) {
+         throw createError({ statusCode: error.status, statusMessage: error.message })
       }
-   }
- 
-   try {
-      const newPost = await postModel().createPost({
-         title: 'test',
-         thumbnail: result[0]
-      })
-      console.log(newPost)
-   } catch (err: any) {
-      throw createError({ statusCode: err.status, statusMessage: err.message })
    }
 
    return result

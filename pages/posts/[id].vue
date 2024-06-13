@@ -1,5 +1,9 @@
 <template>
-   <div class="bg-emerald-400 py-14 text-center text-black">
+   <div class="bg-emerald-400 pt-7 pb-14 text-center text-black">
+      <NuxtLink to="/posts"
+         class="block max-w-fit mr-auto text-base hover:text-white hover:bg-orange-400 ml-6 px-4 py-1 border-2 border-orange-400 rounded-lg transition-colors">Back
+         to
+         Posts</NuxtLink>
       <h2 class="text-xl first-letter:capitalize">{{ post?.title }}</h2>
       <small class="text-gray-700 italic font-bold">{{ date }}</small>
       <div class="grid grid-cols-1 md:grid-cols-5 mt-4">
@@ -7,7 +11,7 @@
             <img :src="post?.thumbnail">
          </div>
          <div class="col-span-3 only:col-span-5" v-if="post?.content">
-            <div v-html="post?.content"></div>
+            <div class="text-base" v-html="post?.content"></div>
          </div>
       </div>
    </div>

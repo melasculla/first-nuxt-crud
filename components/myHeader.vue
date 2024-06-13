@@ -9,13 +9,13 @@
                   to="/">Home</NuxtLink>
                <NuxtLink
                   class="max-w-max py-2 px-2 text-white font-bold text-base transition-colors duration-600 hover:text-amber-500 hover:bg-slate-800 rounded-lg bg-rose-300 sm:bg-transparent"
-                  to="/upload">Upload</NuxtLink>
-               <NuxtLink
-                  class="max-w-max py-2 px-2 text-white font-bold text-base transition-colors duration-600 hover:text-amber-500 hover:bg-slate-800 rounded-lg bg-rose-300 sm:bg-transparent"
                   to="/users">Users</NuxtLink>
                <NuxtLink
                   class="max-w-max py-2 px-2 text-white font-bold text-base transition-colors duration-600 hover:text-amber-500 hover:bg-slate-800 rounded-lg bg-rose-300 sm:bg-transparent"
                   to="/posts">Posts</NuxtLink>
+               <NuxtLink
+                  class="max-w-max py-2 px-2 text-white font-bold text-base transition-colors duration-600 hover:text-amber-500 hover:bg-slate-800 rounded-lg bg-rose-300 sm:bg-transparent"
+                  to="/posts/create">Create Post</NuxtLink>
                <NuxtLink
                   class="max-w-max py-2 px-2 text-white font-bold text-base transition-colors duration-600 hover:text-amber-500 hover:bg-slate-800 rounded-lg bg-rose-300 sm:bg-transparent"
                   to="/login" v-if="!loggedIn">Log In</NuxtLink>

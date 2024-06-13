@@ -10,7 +10,7 @@
          </div>
       </div>
       <div v-else class="text-3xl uppercase tracking-wider">
-         <p class="animate-bounce">posts don't exist</p>
+         <p class="animate-bounce">posts will appear soon..</p>
       </div>
    </div>
 </template>

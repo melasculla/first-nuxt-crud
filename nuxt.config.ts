@@ -3,19 +3,24 @@ import { connection } from "./server/utils/useDB"
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
-    postgreSqlUrl: '',
+    postgreSqlUrl: "",
+    accessJwtSecret: "",
+    refreshJwtSecret: "",
+    redisPassword: ""
   },
   nitro: {
     imports: {
       dirs: [
-        './server/db',
-        './server/models'
+        "./server/db",
+        "./server/models"
       ]
     },
     storage: {
-      myCache: {
-        driver: 'fs',
-        base: '.cache'
+      redis: {
+        driver: "redis",
+        host: process.env.NUXT_REDIS_HOST,
+        port: process.env.NUXT_REDIS_PORT,
+        password: process.env.NUXT_REDIS_PASSWORD
       }
     }
   },
@@ -41,17 +46,17 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    '/posts/**': {
+    "/posts/**": {
       prerender: true,
       isr: true
     },
-    '/user/**': {
+    "/user/**": {
       prerender: true,
       isr: true
     },
   },
   hooks: {
-    'close': () => {
+    "close": () => {
       connection.end()
     }
   }

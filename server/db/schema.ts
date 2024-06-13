@@ -11,6 +11,7 @@ export const users = pgTable('users', {
 export type Roles = 'user' | 'admin'
 export type User = typeof users.$inferSelect; // return type when queried
 export type NewUser = typeof users.$inferInsert; // insert type
+export type UserWithoutPassword = Omit<User, 'password'>
 
 
 export const posts = pgTable('posts', {

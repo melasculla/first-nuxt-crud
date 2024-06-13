@@ -10,6 +10,6 @@ export default defineEventHandler(async (event) => {
     const newUser = await userModel().createUser({ name, password: hashedPassword });
     return newUser;
   } catch (error: any) {
-    return createError({ statusCode: error.status, statusMessage: error.message })
+    throw createError({ statusCode: error.status, statusMessage: error.message })
   }
 });

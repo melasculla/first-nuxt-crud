@@ -16,7 +16,7 @@ export const userModel = () => {
   }
 
   const createUser = async (user: NewUser) => {
-    const [newUser] = await db.insert(users).values(user).returning({ id: users.id, name: users.name });
+    const [newUser] = await db.insert(users).values(user).returning({ id: users.id, name: users.name, role: users.role });
     return newUser
   }
 

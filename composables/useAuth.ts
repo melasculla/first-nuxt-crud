@@ -1,6 +1,4 @@
 export const useAuth = () => {
-   const token = useCookie('auth');
-   const refreshCookieToken = useCookie('refresh');
    const user = useState<User | null>('currentUser');
    const loggedIn = computed(() => user.value !== null);
 
@@ -45,23 +43,13 @@ export const useAuth = () => {
       }
    }
 
-   const refreshToken = async () => {
-      try {
-         await $fetch('/api/refreshToken')
-      } catch (error) {
-         console.warn('Failed to refresh token: ', error)
-      }
-   }
-
    const checkAuthCookie = async () => {
-      if (token.value && refreshCookieToken.value) return
-      if (refreshCookieToken.value) {
-         try {
-            await refreshToken()
-            return
-         } catch (error: any) { }
-      }
+      const token = useCookie('auth')
+      if (token.value) return
+
       user.value = null
+      // const data = await $fetch('/middleware/auth')
+      // console.log(data)
    }
 
    return { loggedIn, user, signup, login, logout, checkAuthCookie }

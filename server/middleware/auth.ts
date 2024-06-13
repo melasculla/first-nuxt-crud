@@ -1,17 +1,12 @@
 export default defineEventHandler(async event => {
-   const token = getCookie(event, 'auth')
-   const refreshToken = getCookie(event, 'refresh')
-   event.context.accessExpires = 60 * 20 // @ 20 mins
-   event.context.refreshExpires = 60 * 60 * 1 // @ 1 hour
-   event.context.secret = '32478e2e-0de5-54c0-9bf7-85a53440d05c'
+   event.context.accessExpires = 60 * 10        // 10 mins
+   event.context.refreshExpires = 60 * 60 * 3   // 3 hour
 
-   if (token && refreshToken) {
-      await verifyToken(event, token)
-   } else if (refreshToken) {
-      await verifyToken(event, refreshToken, true)
-   } else if (token) {
-      deleteCookie(event, 'auth')
-   }
+   const accessToken = getCookie(event, 'auth')
+
+   const isVerified = accessToken ?
+      await verifyAccessToken(event, accessToken) :
+      await verifyRefreshToken(event)
 
    const protectedRoutes: string[] = [
       '/api/logout',
@@ -19,7 +14,7 @@ export default defineEventHandler(async event => {
    ]
    const isProtectedRoute = protectedRoutes.find(route => event.path.includes(route))
 
-   if (!event.context.loggedIn && isProtectedRoute) {
+   if (!isVerified && isProtectedRoute) {
       throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
    }
 })

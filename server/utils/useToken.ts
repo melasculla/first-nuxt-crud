@@ -35,12 +35,12 @@ export const verifyAccessToken = async (event: H3Event<EventHandlerRequest>, tok
 export const createRefreshToken = async (event: H3Event<EventHandlerRequest>, payload: UserSession) => {
    payload.salt = await bcrypt.genSalt(20);
 
-   const options = payload.exp ? undefined : { expiresIn: refreshExpires } as SignOptions | undefined
+   const options = payload.exp ? undefined : { expiresIn: refreshExpires } as SignOptions
    const token = jwt.sign(payload, config.refreshJwtSecret, options)
 
    const now = Math.ceil(new Date().getTime() / 1000) // in seconds
    const remainExparationTime = payload.exp ?
-      parseInt(payload.exp!) - now:
+      parseInt(payload.exp!) - now :
       refreshExpires
 
    try {
@@ -84,7 +84,7 @@ export const verifyRefreshToken = async (event: H3Event<EventHandlerRequest>) =>
    try {
       const { salt, ...user } = jwt.verify(cookieToken, config.refreshJwtSecret) as UserSession
       const { iat, exp, ...accessUser } = user
-      setUser(event, user)
+      setUser(event, accessUser)
       await createAccessToken(event, accessUser)
       await createRefreshToken(event, user)
       return true

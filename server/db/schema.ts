@@ -9,10 +9,10 @@ export const users = pgTable('users', {
 });
 
 export type Roles = 'user' | 'admin'
-export type User = typeof users.$inferSelect; // return type when queried
+export type User = typeof users.$inferSelect & { likedPosts?: Post['id'][] }; // return type when queried
 export type NewUser = typeof users.$inferInsert; // insert type
+export type UserColumns = typeof users._.columns;
 export type UserWithoutPassword = Omit<User, 'password'>
-
 
 export const posts = pgTable('posts', {
    id: serial('id').primaryKey(),
@@ -23,8 +23,9 @@ export const posts = pgTable('posts', {
 });
 
 
-export type Post = typeof posts.$inferSelect; // return type when queried
+export type Post = typeof posts.$inferSelect & { likes?: number, isLiked?: boolean }; // return type when queried
 export type NewPost = typeof posts.$inferInsert; // insert type
+export type PostColumns = typeof posts._.columns;
 
 
 export const usersToPosts = pgTable('users_to_posts', {

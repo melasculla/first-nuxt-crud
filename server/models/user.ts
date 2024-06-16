@@ -1,8 +1,13 @@
 import { eq } from "drizzle-orm";
 
 export const userModel = () => {
-  const getUsers = async (): Promise<Omit<User, 'password'>[]> => {
-    return db.select({ id: users.id, name: users.name, role: users.role }).from(users)
+  const getUsers = async (): Promise<UserWithoutPassword[]> => {
+    const usersList = db.query.users.findMany({
+      columns: {
+        password: false
+      }
+    })
+    return usersList
   }
 
   const getUser = async (id: number): Promise<User> => {
@@ -15,12 +20,22 @@ export const userModel = () => {
     return user
   }
 
+  const getUserLikes = async (id: number): Promise<User['likedPosts']> => {
+    const likes = await db.query.usersToPosts.findMany({
+      where: eq(usersToPosts.userId, id),
+      columns: {
+        userId: false
+      }
+    })
+    return likes.map(({ postId }) => postId)
+  }
+
   const createUser = async (user: NewUser) => {
     const [newUser] = await db.insert(users).values(user).returning({ id: users.id, name: users.name, role: users.role });
     return newUser
   }
 
-  const updateUser = async (user: Omit<User, 'password'>) => {
+  const updateUser = async (user: UserWithoutPassword) => {
     const [updatedUser] = await db.update(users)
       .set({ name: user.name, role: user.role })
       .where(eq(users.id, user.id))
@@ -32,5 +47,5 @@ export const userModel = () => {
     return db.delete(users).where(eq(users.id, id))
   }
 
-  return { getUsers, getUser, getUserByName, createUser, updateUser, deleteUser }
+  return { getUsers, getUser, getUserLikes, getUserByName, createUser, updateUser, deleteUser }
 }

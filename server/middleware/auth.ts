@@ -5,8 +5,9 @@ export default defineEventHandler(async event => {
       await verifyRefreshToken(event)
 
    const protectedRoutes: string[] = [
-      '/api/posts/create',
       '/api/images/upload',
+      '/api/posts/create',
+      '/api/posts/like',
       '/api/logout',
       '/api/user/',
    ]

@@ -2,16 +2,17 @@ import { eq, and, count } from "drizzle-orm";
 
 export const postModel = () => {
   const getPosts = async (): Promise<Post[]> => {
-    const postsList = await db
-      .select({
-        ...posts as PostColumns,
-        likes: count(usersToPosts.userId),
-      })
-      .from(posts)
-      .leftJoin(usersToPosts, eq(posts.id, usersToPosts.postId))
-      .groupBy(posts.id)
-      .orderBy(posts.id)
+    // const postsList = await db
+    //   .select({
+    //     ...posts as PostColumns,
+    //     likes: count(usersToPosts.userId),
+    //   })
+    //   .from(posts)
+    //   .leftJoin(usersToPosts, eq(posts.id, usersToPosts.postId))
+    //   .groupBy(posts.id)
+    //   .orderBy(posts.id)
 
+    const postsList = await db.query.posts.findMany()
     return postsList
   }
 

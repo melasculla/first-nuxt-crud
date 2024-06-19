@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
   if (!updatedUser.id) throw createError({ statusCode: 404, statusMessage: 'User not Found' })
 
   // TODO: figure out what to do with token when name changes
+
   // if (event.context.user.id === id) {
   //   await createAccessToken(event, { id, name: newName, role: updatedUser.role })
   // }

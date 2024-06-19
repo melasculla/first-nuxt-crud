@@ -1,11 +1,11 @@
 <template>
    <div class="bg-emerald-400 py-14 text-center h-5/6 flex items-center justify-center">
       <template v-if="!pending">
-         <div class="w-full grid grid-cols-2 md:grid-cols-4 px-4 gap-4" v-if="data?.length">
+         <div class="w-full grid grid-cols-2 md:grid-cols-4 px-4 gap-4 items-start" v-if="data?.length">
             <div v-for="post in data" :key="post.id">
                <button type="button" class="font-bold flex justify-center items-center gap-1 mb-1"
                   @click="toggleLike(post.id)">
-                  <span class="text-sm">{{ post?.likes }}</span>
+                  <!-- <span class="text-sm">{{ post?.likes }}</span> -->
                   <svg v-if="post.isLiked" class="hover:text-red-600 size-5" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                      viewBox="0 0 48 48">
                      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -20,9 +20,12 @@
                   </svg>
                </button>
                <NuxtLink :to="`/posts/${post.id}`" class="block max-w-max text-xl font-bold font-mono hover:bg-white hover:text-black
-               hover:border-black transition-colors mx-auto rounded-md first-letter:capitalize">
+               hover:border-black transition-colors mx-auto rounded-md first-letter:capitalize h-max">
                   {{ post.title }}
-                  <img :src="post.thumbnail!">
+                  <div class="overflow-hidden aspect-square">
+                     <img :src="post.thumbnail" class="w-full h-full object-cover" v-if="post.thumbnail">
+                     <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-full h-full" width="32" height="32" viewBox="0 0 32 32"><path fill="currentColor" d="M30 3.414L28.586 2L2 28.586L3.414 30l2-2H26a2.003 2.003 0 0 0 2-2V5.414zM26 26H7.414l7.793-7.793l2.379 2.379a2 2 0 0 0 2.828 0L22 19l4 3.997zm0-5.832l-2.586-2.586a2 2 0 0 0-2.828 0L19 19.168l-2.377-2.377L26 7.414zM6 22v-3l5-4.997l1.373 1.374l1.416-1.416l-1.375-1.375a2 2 0 0 0-2.828 0L6 16.172V6h16V4H6a2 2 0 0 0-2 2v16z"/></svg>
+                  </div>
                </NuxtLink>
             </div>
          </div>
@@ -40,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-const { data, pending, refresh } = await useFetch('/api/posts', { immediate: false, server: false })
+const { data, pending } = await useLazyFetch('/api/posts')
 const { loggedIn } = useAuth()
 const router = useRouter()
 const proccesingLike = ref<boolean>(false)
@@ -62,10 +65,6 @@ const toggleLike = async (postId: Post['id']) => {
 
    post.isLiked = !post.isLiked
 }
-
-onMounted(() => {
-   refresh()
-})
 </script>
 
 <style scoped></style>

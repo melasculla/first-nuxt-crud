@@ -21,9 +21,7 @@
 </template>
 
 <script setup lang="ts">
-const { data: users, pending, refresh } = await useFetch('/api/users', { immediate: false })
-
-onMounted(() => refresh())
+const { data: users, pending } = await useLazyFetch('/api/users')
 </script>
 
 <style scoped></style>

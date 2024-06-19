@@ -77,6 +77,8 @@ export const verifyRefreshToken = async (event: H3Event<EventHandlerRequest>) =>
    const storedToken = await useStorage('redis:tokens').getItem(userID.toString()) as string
    const isTokenVaild = storedToken === cookieToken
    if (!isTokenVaild) {
+      console.info('Redis: ' + storedToken, 'Cookie: ' + cookieToken)
+      console.warn(`Tokens: 1 - ${storedToken}, 2- ${cookieToken}`)
       await removeUser(event, undefined, `Token Not Vaild (UserID: ${userID})`)
       return false
    }

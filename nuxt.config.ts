@@ -22,6 +22,13 @@ export default defineNuxtConfig({
         port: process.env.NUXT_REDIS_PORT,
         password: process.env.NUXT_REDIS_PASSWORD
       }
+    },
+    experimental: {
+      tasks: true
+    },
+    scheduledTasks: {
+      // https://crontab.guru
+      '*/20 * * * *': ['posts:update']
     }
   },
   devtools: { enabled: true },
@@ -46,6 +53,18 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
+    // "/posts": {
+    //   prerender: true
+    // },
+    "/posts/15": {
+      prerender: true
+    },
+    "/posts/16": {
+      prerender: true
+    },
+    "/posts/17": {
+      prerender: true
+    },
     "/posts/**": {
       prerender: true,
       isr: true
@@ -56,8 +75,12 @@ export default defineNuxtConfig({
     },
   },
   hooks: {
-    "close": () => {
+    "build:before": () => {
       connection.end()
+      console.info('before build')
+    },
+    "close": () => {
+      // connection.end()
     }
   }
 })

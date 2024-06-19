@@ -57,7 +57,7 @@ const proccesingLike = ref<boolean>(false)
 const toggleLike = async () => {
    if (!loggedIn.value) return router.push('/login')
    if (!post.value || proccesingLike.value) return
-   
+
    proccesingLike.value = true
    if (post.value.isLiked) {
       await $fetch('/api/posts/like/' + id, { method: 'DELETE' })

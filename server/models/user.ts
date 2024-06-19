@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export const userModel = () => {
   const getUsers = async (): Promise<UserWithoutPassword[]> => {
@@ -30,6 +30,16 @@ export const userModel = () => {
     return likes.map(({ postId }) => postId)
   }
 
+  const getUserLike = async (id: User['id'], pid: Post['id']): Promise<Post['id'] | undefined> => {
+    const like = await db.query.usersToPosts.findFirst({
+      where: and(eq(usersToPosts.postId, pid), eq(usersToPosts.userId, id)),
+      columns: {
+        userId: false
+      }
+    })
+    return like?.postId
+  }
+
   const createUser = async (user: NewUser) => {
     const [newUser] = await db.insert(users).values(user).returning({ id: users.id, name: users.name, role: users.role });
     return newUser
@@ -47,5 +57,5 @@ export const userModel = () => {
     return db.delete(users).where(eq(users.id, id))
   }
 
-  return { getUsers, getUser, getUserLikes, getUserByName, createUser, updateUser, deleteUser }
+  return { getUsers, getUser, getUserLikes, getUserLike, getUserByName, createUser, updateUser, deleteUser }
 }

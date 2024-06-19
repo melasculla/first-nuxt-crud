@@ -1,8 +1,11 @@
 export default defineEventHandler(async (event) => {
   const id = parseInt(getRouterParam(event, "id")!);
 
-  const { password, ...user } = await userModel().getUser(id);
-  if (!user) throw createError({ statusCode: 404, statusMessage: 'User not Found' })
+  try {
+    const { password, ...user } = await userModel().getUser(id);
+    return user;
+  } catch (err: any) {
+    throw createError({ statusCode: 404, statusMessage: 'User not Found' })
+  }
 
-  return user;
 });

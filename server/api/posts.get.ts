@@ -1,10 +1,16 @@
 export default defineEventHandler(async (event) => {
-   const posts = await postModel().getPosts()
+   let posts: Post[] = []
+
+   const postList = await useStorage('redis:posts').getItem('postList') as Post[]
+   posts = postList || await postModel().getPosts()
+   if (!postList) {
+      await useStorage('redis:posts').setItem('postList', posts)
+   }
 
    if (event.context.loggedIn) {
-      const currentLikes: User['likedPosts'] = await event.$fetch('/api/posts/like/current')
+      const likes = await currentLikes(event.context.user.id) as User['likedPosts']
       posts.forEach(post => {
-         post.isLiked = currentLikes?.includes(post.id)
+         post.isLiked = likes?.includes(post.id)
          return post
       })
    }

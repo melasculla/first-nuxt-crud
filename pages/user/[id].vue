@@ -2,9 +2,9 @@
    <div class="bg-emerald-400 text-2xl text-red-400 p-4">
       <form @submit.prevent="handleForm" class="grid grid-cols-1 lg:grid-cols-2 gap-5 justify-items-center items-center">
          <input disabled class="rounded-3xl px-4 py-2 outline-none focus:ring-4 ring-offset-2 ring-yellow-700 w-full"
-            type="text" name="id" v-model="id" placeholder="ID" />
+            type="text" name="id" v-model="id" :placeholder="pending ? `Loading..` : `ID`" />
          <input class="rounded-3xl px-4 py-2 outline-none focus:ring-4 ring-offset-2 ring-yellow-700 w-full" type="text"
-            name="name" v-model="name" placeholder="Name" />
+            name="name" v-model="name" :placeholder="pending ? `Loading..` : `Name`" />
          <div>
             <button type="button" @click="removeUser"
                class="text-black rounded-3xl px-12 py-3 bg-red-600 text-base uppercase hover:bg-white transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:grayscale filter">Remove
@@ -31,7 +31,7 @@ const route = useRoute()
 const router = useRouter()
 const paramID = parseInt(route.params.id as string)
 
-const { data: user, error } = await useFetch<User>(`/api/user/${paramID}`)
+const { data: user, pending, error } = await useLazyFetch<User>(`/api/user/${paramID}`)
 if (!user.value || error.value) {
    router.back()
    throw createError({

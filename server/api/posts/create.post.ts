@@ -4,6 +4,7 @@ export default defineEventHandler(async event => {
 
    try {
       const createdPost = await postModel().createPost(newPost)
+      await runTask('posts:update')
       return true
    } catch (error: any) {
       throw createError({ statusCode: error.status, statusMessage: error.message })

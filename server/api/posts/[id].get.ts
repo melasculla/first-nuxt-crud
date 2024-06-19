@@ -5,8 +5,8 @@ export default defineEventHandler(async event => {
    if (!post) throw createError({ statusCode: 404, statusMessage: 'Post not Found' })
 
    if (event.context.loggedIn) {
-      const currentLikes: User['likedPosts'] = await event.$fetch('/api/posts/like/current')
-      post.isLiked = currentLikes?.includes(post.id)
+      const isLiked = await currentLikes(event.context.user.id, id) as boolean
+      post.isLiked = isLiked
    }
 
    return post

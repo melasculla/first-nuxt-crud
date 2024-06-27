@@ -17,6 +17,4 @@
 const currentUser = useState<User>('currentUser')
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

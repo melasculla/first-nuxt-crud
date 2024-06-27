@@ -1,8 +1,10 @@
 export default defineEventHandler(async event => {
    const accessToken = getCookie(event, 'auth')
+   const refreshToken = getCookie(event, 'refresh')
+
    const isVerified = accessToken ?
       await verifyAccessToken(event, accessToken) :
-      await verifyRefreshToken(event)
+      await verifyRefreshToken(event, refreshToken)
 
    const protectedRoutes: string[] = [
       '/api/images/upload',
@@ -12,8 +14,5 @@ export default defineEventHandler(async event => {
       '/api/user/',
    ]
    const isProtectedRoute = protectedRoutes.find(route => event.path.includes(route))
-
-   if (!isVerified && isProtectedRoute) {
-      throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
-   }
+   if (isProtectedRoute && !isVerified) throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
 })

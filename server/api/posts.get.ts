@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 
    const postList = await useStorage('redis:posts').getItem('postList') as Post[]
    posts = postList || await postModel().getPosts()
-   if (!postList) {
+   if (!postList && posts.length) {
       await useStorage('redis:posts').setItem('postList', posts)
    }
 

@@ -53,24 +53,10 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    // "/posts": {
-    //   prerender: true
-    // },
-    "/posts/15": {
-      prerender: true
-    },
-    "/posts/16": {
-      prerender: true
-    },
-    "/posts/17": {
-      prerender: true
-    },
     "/posts/**": {
-      prerender: true,
       isr: true
     },
     "/user/**": {
-      prerender: true,
       isr: true
     },
   },

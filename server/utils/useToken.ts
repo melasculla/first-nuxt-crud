@@ -55,8 +55,7 @@ export const createRefreshToken = async (event: H3Event<EventHandlerRequest>, pa
    return false
 }
 
-export const verifyRefreshToken = async (event: H3Event<EventHandlerRequest>) => {
-   const cookieToken = getCookie(event, 'refresh')
+export const verifyRefreshToken = async (event: H3Event<EventHandlerRequest>, cookieToken: string | undefined) => {
    if (!cookieToken) return false
 
    let userID: number | undefined = undefined
@@ -77,8 +76,6 @@ export const verifyRefreshToken = async (event: H3Event<EventHandlerRequest>) =>
    const storedToken = await useStorage('redis:tokens').getItem(userID.toString()) as string
    const isTokenVaild = storedToken === cookieToken
    if (!isTokenVaild) {
-      console.info('Redis: ' + storedToken, 'Cookie: ' + cookieToken)
-      console.warn(`Tokens: 1 - ${storedToken}, 2- ${cookieToken}`)
       await removeUser(event, undefined, `Token Not Vaild (UserID: ${userID})`)
       return false
    }
@@ -110,7 +107,7 @@ const setUser = (event: H3Event<EventHandlerRequest>, user: UserSession) => {
  * Removing User from context
 */
 const removeUser = async (event: H3Event<EventHandlerRequest>, error?: any, message?: string) => {
-   console.warn(`JWT error: `, message || error.message)
+   if (!event.path.includes('api')) console.warn(`JWT error: `, message || error.message)
    event.context.user = null
    event.context.loggedIn = false
    deleteCookie(event, 'auth')

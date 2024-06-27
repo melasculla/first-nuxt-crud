@@ -11,17 +11,7 @@
                </div>
             </transition>
          </div>
-         <div>
-            <textarea
-               class="block w-full max-w-[800px] rounded px-3 py-2 text-xl placeholder:text-orange-600 outline-none ring-offset-black focus:ring-4 ring-offset-4 ring-purple-400 transition-shadow duration-500"
-               type="password" placeholder="Post Content" v-model="post.content" @input="validateContent" />
-            <transition name="error">
-               <div class="text-center overflow-hidden max-h-12" v-if="errors.content">
-                  <p class="text-red-600 text-sm mt-4">{{
-                     errors.content }}</p>
-               </div>
-            </transition>
-         </div>
+         <Editor ref="editor" />
          <UploadFiles :multiple="false" title="Add thumbnail" @imagesAdded="handleImage" />
          <button
             class="rounded-md bg-black text-white text-base px-4 py-1 hover:bg-white hover:text-blue-800 font-bold transition-all disabled:grayscale-100 disabled:bg-slate-400 disabled:hover:text-black"
@@ -35,14 +25,14 @@ definePageMeta({
    middleware: ['auth-require']
 })
 
+const editor = ref()
 const post = ref<NewPost>({
    title: '',
-   content: '',
-   thumbnail: ''
+   thumbnail: '',
+   content: null
 })
 const errors = ref({
-   title: '',
-   content: ''
+   title: ''
 })
 
 
@@ -59,24 +49,6 @@ const validateTitle = () => {
    return true
 }
 
-const validateContent = () => {
-   const maxContentLength = 500
-   const isContentEmpty = !post.value.content?.length
-   const isContentSoLong = post.value.content?.length! >= maxContentLength
-
-   if (isContentSoLong) {
-      errors.value.content = `Content cannot be greater than ${maxContentLength} characters long`
-      return
-   }
-   if (isContentEmpty) {
-      errors.value.content = `Content cannot be empty`
-      return
-   }
-
-   errors.value.content = ''
-   return true
-}
-
 const thumbnail = ref<FileList>()
 const handleImage = (files: FileList) => { thumbnail.value = files }
 
@@ -84,8 +56,7 @@ const router = useRouter()
 const creating = ref<boolean>(false)
 const handleForm = async (e: Event) => {
    const isTitleValid = validateTitle()
-   const isContentVaild = validateContent()
-   const isVaildForm = isTitleValid && isContentVaild
+   const isVaildForm = isTitleValid
    if (!isVaildForm) return
 
    creating.value = true
@@ -104,6 +75,8 @@ const handleForm = async (e: Event) => {
          console.warn(error)
       }
    }
+
+   post.value.content = await editor.value.save()
 
    try {
       const data = await $fetch('/api/posts/create', {

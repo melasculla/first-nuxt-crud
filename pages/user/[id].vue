@@ -1,10 +1,11 @@
 <template>
    <div class="bg-emerald-400 text-2xl text-red-400 p-4">
-      <form @submit.prevent="handleForm" class="grid grid-cols-1 lg:grid-cols-2 gap-5 justify-items-center items-center">
+      <form @submit.prevent="handleForm"
+         class="grid grid-cols-1 lg:grid-cols-2 gap-5 justify-items-center items-center">
          <input disabled class="rounded-3xl px-4 py-2 outline-none focus:ring-4 ring-offset-2 ring-yellow-700 w-full"
-            type="text" name="id" v-model="id" :placeholder="pending ? `Loading..` : `ID`" />
+            type="text" name="id" v-model="user.id" :placeholder="pending ? `Loading..` : `ID`" />
          <input class="rounded-3xl px-4 py-2 outline-none focus:ring-4 ring-offset-2 ring-yellow-700 w-full" type="text"
-            name="name" v-model="name" :placeholder="pending ? `Loading..` : `Name`" />
+            name="name" v-model="user.name" :placeholder="pending ? `Loading..` : `Name`" />
          <div>
             <button type="button" @click="removeUser"
                class="text-black rounded-3xl px-12 py-3 bg-red-600 text-base uppercase hover:bg-white transition-colors disabled:bg-slate-300 disabled:text-slate-500 disabled:grayscale filter">Remove
@@ -31,8 +32,21 @@ const route = useRoute()
 const router = useRouter()
 const paramID = parseInt(route.params.id as string)
 
-const { data: user, pending, error } = await useLazyFetch<User>(`/api/user/${paramID}`)
-if (!user.value || error.value) {
+const { data, pending, error } = await useLazyFetch<UserWithoutPassword>(`/api/user/${paramID}`)
+
+const user = ref<UserWithoutPassword>(data.value || {
+   id: 0,
+   name: '',
+   role: 'user'
+})
+
+watch(data, (newData: UserWithoutPassword | null) => {
+   console.log(newData)
+   if (!newData) return
+   user.value = newData
+})
+
+if (error.value) {
    router.back()
    throw createError({
       statusCode: error.value?.statusCode || 404,
@@ -40,11 +54,10 @@ if (!user.value || error.value) {
    })
 }
 
-const id = ref(`ID: ${user.value?.id}`)
-const name = ref(user.value?.name)
+
 const oldName = ref(user.value?.name)
 const isOldName = computed(() => {
-   return name.value === oldName.value
+   return user.value?.name === oldName.value
 })
 
 const { user: authUser, logout } = useAuth()
@@ -57,15 +70,15 @@ const handleForm = async (e: Event) => {
       await $fetch(`/api/user/${paramID}`, {
          method: 'PATCH',
          body: {
-            name: name.value
+            name: user.value?.name
          }
       })
 
-      oldName.value = name.value
+      oldName.value = user.value?.name
       if (authUser.value?.id !== paramID) return
       authUser.value = {
          id: authUser.value?.id || 0,
-         name: name.value,
+         name: user.value?.name!,
          password: '',
          role: authUser.value?.role || 'user'
       }

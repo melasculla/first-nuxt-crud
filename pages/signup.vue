@@ -107,7 +107,7 @@ const handleForm = async (e: Event) => {
       await signup(name.value.toLowerCase(), password.value)
       router.push('/')
    } catch (error: any) {
-      if (error.message.includes('duplicatee'))
+      if (error.message.includes('duplicate'))
          errors.value.name = 'This name already in use'
    }
 }

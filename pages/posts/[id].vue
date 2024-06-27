@@ -7,13 +7,9 @@
          Posts</NuxtLink>
       <h2 class="text-xl first-letter:capitalize">{{ post?.title }}</h2>
       <small class="text-gray-700 italic font-bold">{{ date }}</small>
-      <div class="grid grid-cols-1 md:grid-cols-5 mt-4">
-         <div class="col-span-2 only:col-span-5" v-if="post?.thumbnail">
-            <img :src="post?.thumbnail">
-         </div>
-         <div class="col-span-3 only:col-span-5" v-if="post?.content">
-            <div class="text-base" v-html="post?.content"></div>
-         </div>
+      <div class="grid">
+         <img v-if="post?.thumbnail" :src="post?.thumbnail" class="block w-2/3 md:w-1/3 mx-auto my-2">
+         <EditorContent :content="post?.content" v-if="post?.content" />
       </div>
       <button type="button" class="font-bold flex justify-center items-center gap-1 mt-2 mx-auto" @click="toggleLike">
          <span class="text-sm">{{ post?.likes }}</span>
@@ -32,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+const router = useRouter()
 const { id } = useRoute().params
 const { data: post, error } = await useLazyFetch<Post>('/api/posts/' + id)
 
@@ -50,7 +47,6 @@ const date = computed(() => {
    return `${isoDate.day} ${isoDate.month}, ${isoDate.year} (${isoDate.hours + ':' + isoDate.minutes})`
 })
 
-const router = useRouter()
 const { loggedIn } = useAuth()
 const proccesingLike = ref<boolean>(false)
 

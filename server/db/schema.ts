@@ -1,5 +1,6 @@
-import { pgTable, text, varchar, integer, timestamp, primaryKey, serial } from 'drizzle-orm/pg-core';
+import { pgTable, text, varchar, integer, timestamp, primaryKey, serial, json } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
+import { OutputData } from '@editorjs/editorjs';
 
 export const users = pgTable('users', {
    id: serial('id').primaryKey(),
@@ -17,13 +18,14 @@ export type UserWithoutPassword = Omit<User, 'password'>
 export const posts = pgTable('posts', {
    id: serial('id').primaryKey(),
    title: text('title').notNull(),
-   content: text('content'),
+   content: json('content').$type<OutputData>(),
    thumbnail: varchar('thumbnail', { length: 256 }),
    createdAt: timestamp('createdAt').notNull().defaultNow()
 });
 
 
 export type Post = typeof posts.$inferSelect & { likes?: number, isLiked?: boolean }; // return type when queried
+export type PostList = Omit<Post, 'content' | 'createdAt'>[]
 export type NewPost = typeof posts.$inferInsert; // insert type
 export type PostColumns = typeof posts._.columns;
 

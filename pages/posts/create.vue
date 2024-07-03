@@ -1,6 +1,6 @@
 <template>
    <div class="bg-emerald-400 p-5 h-5/6 flex items-center justify-center">
-      <form method="post" @submit.prevent="handleForm" class="grid justify-center justify-items-center gap-5">
+      <form method="post" @submit.prevent="handleForm" class="w-11/12 grid justify-items-center gap-5">
          <div>
             <input
                class="block w-full max-w-[800px] rounded px-3 py-2 text-xl placeholder:text-orange-600 outline-none ring-offset-black focus:ring-4 ring-offset-4 ring-purple-400 transition-shadow duration-500"

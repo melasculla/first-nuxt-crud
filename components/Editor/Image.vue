@@ -1,7 +1,7 @@
 <template>
    <div>
-      <img :src="block.file.url" :alt="block.caption" :title="block.caption" class="border-orange-400"
-         :class="block.withBorder ? 'border-2' : '' + block.stretched ? 'w-full' : '' + block.withBackground ? 'bg-red-600' : ''" />
+      <img v-loader="block.file.url" :alt="block.caption" :title="block.caption" class="border-orange-400"
+         :class="imageProps" />
    </div>
 </template>
 
@@ -11,6 +11,16 @@ import type { OutputBlockData } from '@editorjs/editorjs';
 const { block } = defineProps<{
    block: OutputBlockData['data']
 }>()
+
+const imageProps = computed(() => {
+   const classList = ref<string>('')
+   classList.value += block.withBorder ? ' border-2' : ''
+   classList.value += block.stretched ? ' w-full' : ''
+   classList.value += block.withBackground ? ' bg-red-600' : ''
+   return classList.value
+})
+
+
 </script>
 
 <style scoped></style>

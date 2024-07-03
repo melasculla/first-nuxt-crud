@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     }
   },
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss"],
+  modules: ["@nuxtjs/tailwindcss", "@nuxt/image"],
   app: {
     pageTransition: {
       name: "page",
@@ -61,11 +61,8 @@ export default defineNuxtConfig({
     },
   },
   hooks: {
-    "build:before": () => {
-      connection.end()
-      console.info('before build')
-    },
     "close": () => {
+      process.exit(1)
       // connection.end()
     }
   }

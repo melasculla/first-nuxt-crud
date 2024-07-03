@@ -1,36 +1,40 @@
 <template>
-   <div class="bg-emerald-400 pt-7 pb-14 text-center text-black">
+   <div class="bg-emerald-400 pt-7 pb-14 text-black">
       <NuxtLink to="/posts"
          class="block max-w-fit mr-auto text-base hover:text-white hover:bg-orange-400 ml-6 px-4 py-1 border-2 border-orange-400 rounded-lg transition-colors">
          Back
          to
          Posts</NuxtLink>
-      <h2 class="text-xl first-letter:capitalize">{{ post?.title }}</h2>
-      <small class="text-gray-700 italic font-bold">{{ date }}</small>
-      <div class="grid">
+      <article v-if="!pending" class="overflow-hidden">
+         <h2 class="text-xl first-letter:capitalize text-center">{{ post?.title }}</h2>
+         <small class="block text-gray-700 italic font-bold text-center">{{ date }}</small>
          <img v-if="post?.thumbnail" :src="post?.thumbnail" class="block w-2/3 md:w-1/3 mx-auto my-2">
          <EditorContent :content="post?.content" v-if="post?.content" />
+         <button type="button" class="font-bold flex justify-center items-center gap-1 mt-4 mx-auto"
+            @click="toggleLike">
+            <span class="text-sm">{{ post?.likes }}</span>
+            <svg v-if="post?.isLiked" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48"
+               class="hover:text-red-600 transition-colors size-5">
+               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+                  d="M44 19c0-6.075-4.925-11-11-11c-3.72 0-7.01 1.847-9 4.674A10.987 10.987 0 0 0 15 8C8.925 8 4 12.925 4 19c0 11 13 21 20 23.326c1.194-.397 2.562-1.016 4.01-1.826M34.959 27l6.878 8.5m.001-8.5l-6.879 8.5" />
+            </svg>
+            <svg v-else class="text-red-600 size-5" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+               viewBox="0 0 48 48">
+               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+                  d="M15 8C8.925 8 4 12.925 4 19c0 11 13 21 20 23.326C31 40 44 30 44 19c0-6.075-4.925-11-11-11c-3.72 0-7.01 1.847-9 4.674A10.987 10.987 0 0 0 15 8" />
+            </svg>
+         </button>
+      </article>
+      <div v-else class="text-center font-bold text-3xl">
+         <p>Loading...</p>
       </div>
-      <button type="button" class="font-bold flex justify-center items-center gap-1 mt-2 mx-auto" @click="toggleLike">
-         <span class="text-sm">{{ post?.likes }}</span>
-         <svg v-if="post?.isLiked" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48"
-            class="hover:text-red-600 transition-colors size-5">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
-               d="M44 19c0-6.075-4.925-11-11-11c-3.72 0-7.01 1.847-9 4.674A10.987 10.987 0 0 0 15 8C8.925 8 4 12.925 4 19c0 11 13 21 20 23.326c1.194-.397 2.562-1.016 4.01-1.826M34.959 27l6.878 8.5m.001-8.5l-6.879 8.5" />
-         </svg>
-         <svg v-else class="text-red-600 size-5" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-            viewBox="0 0 48 48">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
-               d="M15 8C8.925 8 4 12.925 4 19c0 11 13 21 20 23.326C31 40 44 30 44 19c0-6.075-4.925-11-11-11c-3.72 0-7.01 1.847-9 4.674A10.987 10.987 0 0 0 15 8" />
-         </svg>
-      </button>
    </div>
 </template>
 
 <script setup lang="ts">
 const router = useRouter()
 const { id } = useRoute().params
-const { data: post, error } = await useLazyFetch<Post>('/api/posts/' + id)
+const { data: post, pending, error } = await useLazyFetch<Post>('/api/posts/' + id)
 
 if (error.value)
    throw createError({ statusCode: error.value.statusCode, statusMessage: error.value.statusMessage })

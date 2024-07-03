@@ -15,6 +15,8 @@
 
 <script setup lang="ts">
 const currentUser = useState<User>('currentUser')
+
+const images = ref(12)
 </script>
 
 <style scoped></style>

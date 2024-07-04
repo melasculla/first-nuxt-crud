@@ -2,7 +2,8 @@ export default defineNuxtPlugin(nuxtApp => {
    const imageProps = {
       class: 'animate-spin',
       src: '/loader.svg',
-      loading: 'lazy'
+      loading: 'lazy',
+      test: 'test'
    }
    nuxtApp.vueApp.directive<HTMLImageElement>('loader', {
       beforeMount: (image, binding) => {
@@ -35,7 +36,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
          window.addEventListener('load', loadImage)
       },
-      getSSRProps: (binding) => {
+      getSSRProps: (binding, vnode) => {
          return {
             'data-src': binding.value,
             ...imageProps

@@ -40,7 +40,7 @@
 <script setup lang="ts">
 const router = useRouter()
 const { id } = useRoute().params
-const { data: post, pending, error } = await useLazyFetch<Post>('/api/posts/' + id, { server: false })
+const { data: post, pending, error } = await useLazyFetch<Post>('/api/posts/' + id)
 
 if (error.value)
    throw createError({ statusCode: error.value.statusCode, statusMessage: error.value.statusMessage })

@@ -1,5 +1,3 @@
-import { connection } from "./server/utils/useDB"
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
@@ -59,11 +57,5 @@ export default defineNuxtConfig({
     "/user/**": {
       isr: true
     },
-  },
-  hooks: {
-    "close": () => {
-      process.exit(1)
-      // connection.end()
-    }
   }
 })

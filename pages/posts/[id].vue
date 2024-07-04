@@ -1,14 +1,20 @@
 <template>
    <div class="bg-emerald-400 pt-7 pb-14 text-black">
-      <NuxtLink to="/posts"
-         class="block max-w-fit mr-auto text-base hover:text-white hover:bg-orange-400 ml-6 px-4 py-1 border-2 border-orange-400 rounded-lg transition-colors">
-         Back
-         to
-         Posts</NuxtLink>
+      <div class="grid grid-cols-2 justify-between justify-items-start gap-2 px-4">
+         <NuxtLink to="/posts"
+            class="text-base hover:text-white hover:bg-orange-400 px-4 py-1 border-2 border-orange-400 rounded-lg transition-colors">
+            Back
+            to
+            Posts</NuxtLink>
+         <NuxtLink :to="`/posts/edit-${id}`" v-if="loggedIn"
+            class="text-base hover:text-white hover:bg-orange-400 px-4 py-1 border-2 border-orange-400 rounded-lg transition-colors justify-self-end">
+            Edit</NuxtLink>
+      </div>
       <article v-if="!pending" class="overflow-hidden">
          <h2 class="text-xl first-letter:capitalize text-center">{{ post?.title }}</h2>
          <small class="block text-gray-700 italic font-bold text-center">{{ date }}</small>
-         <img v-if="post?.thumbnail" :src="post?.thumbnail" class="block w-2/3 md:w-1/3 mx-auto my-2">
+         <img v-if="post?.thumbnail" :src="post?.thumbnail" class="block w-2/3 lg:w-1/2 max-w-[800px] mx-auto my-2"
+            loading="lazy" />
          <EditorContent :content="post?.content" v-if="post?.content" />
          <button type="button" class="font-bold flex justify-center items-center gap-1 mt-4 mx-auto"
             @click="toggleLike">
@@ -34,7 +40,7 @@
 <script setup lang="ts">
 const router = useRouter()
 const { id } = useRoute().params
-const { data: post, pending, error } = await useLazyFetch<Post>('/api/posts/' + id)
+const { data: post, pending, error } = await useLazyFetch<Post>('/api/posts/' + id, { server: false })
 
 if (error.value)
    throw createError({ statusCode: error.value.statusCode, statusMessage: error.value.statusMessage })

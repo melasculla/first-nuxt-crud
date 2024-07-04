@@ -28,8 +28,8 @@ const { block } = defineProps<{
    block: OutputBlockData['data']
 }>()
 
-const ytCode = block.embed.replace('https://www.youtube.com/embed/', '').replace('?', '')
-console.log(ytCode)
+const youtubeEmbedLink = new URL(block.embed)
+const ytCode = youtubeEmbedLink.pathname.replace('/embed/', '')
 const thumbnail = `https://i.ytimg.com/vi_webp/${ytCode}/sddefault.webp`
 
 const isShown = ref<boolean>(false)

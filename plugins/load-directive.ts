@@ -27,15 +27,19 @@ export default defineNuxtPlugin(nuxtApp => {
                image.src = src
                img.remove()
                console.log('image loaded')
-         }
+            }
             img.src = src
             window.removeEventListener('load', loadImage)
          }
 
          if (!image.src) {
+            console.log('image has ssr src')
             setDefaultProps()
             loadImage()
+            return
          }
+
+         console.log('image hasnt ssr src')
 
          window.addEventListener('load', loadImage)
       },

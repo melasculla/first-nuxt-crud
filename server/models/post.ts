@@ -6,7 +6,8 @@ export const postModel = () => {
       columns: {
         content: false,
         createdAt: false
-      }
+      },
+      orderBy: (posts, { desc }) => [ desc(posts.createdAt) ]
     })
     return postsList
   }

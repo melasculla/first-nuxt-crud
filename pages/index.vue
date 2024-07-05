@@ -10,14 +10,13 @@
             Role: {{ currentUser.role }}
          </p>
       </div>
-      <ClientOnly><img src="/test.jpg" v-loader></ClientOnly>
+      <NuxtImg src="https://images.unsplash.com/photo-1546083381-2bed38b42cac" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" />
+      <NuxtImg src="https://royalkingdomofmc.com/wp-content/themes/royal/img/about-bg.jpg" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" />
    </div>
 </template>
 
 <script setup lang="ts">
 const currentUser = useState<User>('currentUser')
-
-const images = ref(12)
 </script>
 
 <style scoped></style>

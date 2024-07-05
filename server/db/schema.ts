@@ -19,6 +19,7 @@ export const posts = pgTable('posts', {
    id: serial('id').primaryKey(),
    title: text('title').notNull(),
    content: json('content').$type<OutputData>(),
+   gallery: json('gallery').$type<string[]>(),
    thumbnail: varchar('thumbnail', { length: 256 }),
    createdAt: timestamp('createdAt').notNull().defaultNow()
 });

@@ -3,7 +3,7 @@
       <div v-if="block.service === 'youtube'" :type="block.service">
          <div class="aspect-video w-2/3 xl:w-1/2 mx-auto mb-2 rounded-md overflow-hidden">
             <div class="h-full relative cursor-pointer group" v-if="!isShown" @click.once="loadVideo">
-               <img class="w-full h-full object-cover" :alt="block.caption" :src="thumbnail" />
+               <NuxtImg class="w-full h-full object-cover" :alt="block.caption" :src="thumbnail" loading="lazy" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" />
                <svg
                   class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 filter group-hover:grayscale transition-all"
                   xmlns="http://www.w3.org/2000/svg" width="45.52" height="32" viewBox="0 0 256 180">

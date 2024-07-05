@@ -55,3 +55,9 @@ html {
   opacity: 0;
 } */
 </style>
+
+<style lang="postcss">
+.nuxtImage-loading {
+  @apply aspect-video w-full block mx-auto !object-contain animate-spin
+}
+</style>

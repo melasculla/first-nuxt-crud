@@ -33,12 +33,13 @@ export const postModel = () => {
   }
 
   const createPost = async (post: NewPost): Promise<{ id: number }> => {
-    const [newPost] = await db.insert(posts).values(post).returning({ id: posts.id });
+    const [newPost] = await db.insert(posts).values(post).returning({ id: posts.id })
     return newPost
   }
 
   const updatePost = async (post: Post) => {
-    return db.update(posts).set(post).where(eq(posts.id, post.id))
+    const [updatedPost] = await db.update(posts).set(post).where(eq(posts.id, post.id)).returning({ id: posts.id })
+    return updatedPost
   }
 
   const deletePost = async (id: Post['id']) => {

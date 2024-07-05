@@ -2,7 +2,7 @@
    <div class="bg-emerald-400 py-14 text-center h-5/6 flex items-center justify-center">
       <template v-if="!pending">
          <div class="w-full grid grid-cols-2 md:grid-cols-4 px-4 gap-4 items-start" v-if="data?.length">
-            <div class="h-full grid justify-between" v-for="post in data" :key="post.id">
+            <div class="w-full h-full grid justify-stretch" v-for="post in data" :key="post.id">
                <button type="button" class="font-bold self-start flex justify-center items-center gap-1 mb-1"
                   @click="toggleLike(post.id)">
                   <template v-if="proccesingID === post.id ? false : true">
@@ -23,11 +23,11 @@
                      <img class="size-5 animate-spin" src="/loader.svg" alt="loading..">
                   </template>
                </button>
-               <NuxtLink :to="`/posts/${post.id}`" class="text-xl font-bold font-mono hover:bg-white hover:text-black
+               <NuxtLink :to="`/posts/${post.id}`" class="w-full text-xl font-bold font-mono hover:bg-white hover:text-black
                hover:border-black transition-colors mx-auto rounded-md first-letter:capitalize grid">
                   <p class="self-start">{{ post.title }}</p>
                   <div class="overflow-hidden aspect-square w-full self-end">
-                     <img :src="post.thumbnail" loading="lazy" class="w-full h-full object-cover" v-if="post.thumbnail">
+                     <NuxtImg :src="post.thumbnail" loading="lazy" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" class="w-full h-full object-cover" v-if="post.thumbnail" />
                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-full h-full align-middle" width="32"
                         height="32" viewBox="0 0 32 32">
                         <path fill="currentColor"

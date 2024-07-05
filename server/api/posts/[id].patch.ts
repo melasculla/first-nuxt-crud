@@ -3,9 +3,9 @@ export default defineEventHandler(async event => {
    if (!post) throw createError({ statusCode: 400, statusMessage: 'Bad Request' })
 
    try {
-      await postModel().updatePost(post)
+      const { id } = await postModel().updatePost(post)
       await runTask('posts:update')
-      return true
+      return id
    } catch (error: any) {
       throw createError({ statusCode: error.status, statusMessage: error.message })
    }

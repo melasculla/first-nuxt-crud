@@ -13,8 +13,8 @@
       <article v-if="!pending" class="overflow-hidden">
          <h2 class="text-xl first-letter:capitalize text-center">{{ post?.title }}</h2>
          <small class="block text-gray-700 italic font-bold text-center">{{ date }}</small>
-         <img v-if="post?.thumbnail" :src="post?.thumbnail" class="block w-2/3 lg:w-1/2 max-w-[800px] mx-auto my-2"
-            loading="lazy" />
+         <NuxtImg v-if="post?.thumbnail" :src="post?.thumbnail" class="block w-2/3 lg:w-1/2 max-w-[800px] mx-auto my-2"
+            loading="lazy" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" />
          <EditorContent :content="post?.content" v-if="post?.content" />
          <button type="button" class="font-bold flex justify-center items-center gap-1 mt-4 mx-auto"
             @click="toggleLike">

@@ -1,7 +1,6 @@
 <template>
    <div class="w-full">
       <div id="editorjs" class="border-4 border-blue-500 bg-white min-h-[500px]"></div>
-      {{ imagesToRemove }}
    </div>
 </template>
 

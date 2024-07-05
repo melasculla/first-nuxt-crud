@@ -1,7 +1,7 @@
 <template>
    <div>
-      <img :src="block.file.url" :alt="block.caption" :title="block.caption" class="border-orange-400"
-         :class="imageProps" />
+      <NuxtImg :src="block.file.url" :alt="block.caption" :title="block.caption" class="border-orange-400"
+         :class="imageProps" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" />
    </div>
 </template>
 

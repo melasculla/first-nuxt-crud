@@ -14,7 +14,7 @@ html {
 
 .page-enter-active,
 .page-leave-active {
-  transition: all 800ms ease;
+  transition: all 400ms ease;
 }
 
 .page-enter-active {

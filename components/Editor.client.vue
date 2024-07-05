@@ -1,6 +1,7 @@
 <template>
    <div class="w-full">
-      <div id="editorjs" class="border-4 border-blue-500 bg-white"></div>
+      <div id="editorjs" class="border-4 border-blue-500 bg-white min-h-[500px]"></div>
+      {{ imagesToRemove }}
    </div>
 </template>
 
@@ -37,6 +38,17 @@ const uploadByFile = (file: File) => {
          file
       }
    }))
+}
+
+const imagesToRemove = ref<string[]>([])
+class MyImage extends Image {
+   constructor(EditorJSInstance: any) {
+      super(EditorJSInstance)
+   }
+
+   removed() {
+      imagesToRemove.value.push(this._data.file.url)
+   }
 }
 
 const editor = ref<EditorJS>()
@@ -78,7 +90,7 @@ const tools = {
       }
    },
    image: {
-      class: Image,
+      class: MyImage,
       inlineToolbar: true,
       config: {
          uploader: {
@@ -133,18 +145,21 @@ onMounted(() => {
    })
 })
 
-
 const uploadImages = async (editorOutput: OutputBlockData['data'], images: File[]) => {
    const body = new FormData()
    for (const image of images) {
       body.append('images', image)
    }
-   const urls = await $fetch('/api/images/upload', {
-      method: 'POST',
-      body
-   })
 
-   await findImages(editorOutput, true, urls)
+   try {
+      const urls = await $fetch('/api/images/upload', {
+         method: 'POST',
+         body
+      })
+      await findImages(editorOutput, true, urls)
+   } catch (err: any) {
+      console.error(err)
+   }
 }
 
 const findImages = async (editorOutput: OutputBlockData['data'], replace: boolean = false, urls: string[] = []) => {
@@ -159,11 +174,12 @@ const findImages = async (editorOutput: OutputBlockData['data'], replace: boolea
                if (colType !== 'image') continue
 
                if (!replace) {
-                  if (colData.file.url.includes('blob')) toUpload.push(colData.file.file)
+                  if (colData.file.url.startsWith('blob:'))
+                     toUpload.push(colData.file.file)
                   continue
                }
 
-               if (!colData.file.url.includes('blob')) continue
+               if (!colData.file.url.startsWith('blob:')) continue
 
                colData.file.url = urls[count]
                delete colData.file.file
@@ -174,11 +190,12 @@ const findImages = async (editorOutput: OutputBlockData['data'], replace: boolea
       if (type !== 'image') continue
 
       if (!replace) {
-         if (data.file.url.includes('blob')) toUpload.push(data.file.file)
+         if (data.file.url.startsWith('blob:'))
+            toUpload.push(data.file.file)
          continue
       }
 
-      if (!data.file.url.includes('blob')) continue
+      if (!data.file.url.startsWith('blob:')) continue
 
       data.file.url = urls[count]
       delete data.file.file
@@ -187,7 +204,14 @@ const findImages = async (editorOutput: OutputBlockData['data'], replace: boolea
 
    if (replace) return
 
-   await uploadImages(editorOutput, toUpload)
+   if (toUpload.length) await uploadImages(editorOutput, toUpload)
+}
+
+const removeImagesFromServer = async (images: string[]) => {
+   await $fetch('/api/images/remove', {
+      method: 'DELETE',
+      body: images
+   })
 }
 
 const render = async (data: OutputData) => await editor.value?.render(data)
@@ -197,10 +221,18 @@ const save = async (): Promise<OutputData> => {
 
    await findImages(editorOutput)
 
+   if (imagesToRemove.value.length) {
+      try {
+         await removeImagesFromServer(imagesToRemove.value)
+      } catch (err: any) {
+         console.error(err)
+      }
+   }
+
    return editorOutput
 }
 
-defineExpose({ save })
+defineExpose({ save, imagesToRemove })
 </script>
 
 <style scoped lang="postcss">

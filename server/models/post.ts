@@ -37,8 +37,8 @@ export const postModel = () => {
     return newPost
   }
 
-  const updatePost = async (post: NewPost) => {
-    return db.update(posts).set(post).where(eq(posts.id, post.id!))
+  const updatePost = async (post: Post) => {
+    return db.update(posts).set(post).where(eq(posts.id, post.id))
   }
 
   const deletePost = async (id: Post['id']) => {

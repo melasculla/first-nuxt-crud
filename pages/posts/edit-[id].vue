@@ -43,7 +43,12 @@ definePageMeta({
 })
 const router = useRouter()
 const { id } = useRoute().params
-const { data: post, error, pending } = await useLazyFetch<Post>(`/api/posts/${id}`)
+const { data: post, error, pending } = await useLazyFetch(`/api/posts/${id}`, {
+   transform: (post: Post) => {
+      const { isLiked, likes, createdAt, ...editablePost } = post
+      return editablePost
+   }
+})
 
 if (error.value)
    throw createError({ statusCode: error.value.statusCode, statusMessage: error.value.statusMessage })
@@ -73,6 +78,9 @@ const thumbnail = ref<FileList>()
 const handleImage = (files: FileList) => { thumbnail.value = files }
 
 const removeThumbnail = async () => {
+   if (!post.value!.thumbnail) return
+
+   editor.value?.imagesToRemove.push(post.value!.thumbnail)
    post.value!.thumbnail = ''
 }
 
@@ -102,13 +110,12 @@ const handleForm = async (e: Event) => {
    post.value!.content = await editor.value!.save()
 
    try {
-      console.log(post.value)
-      // const data = await $fetch(`/api/posts/edit-${id}`, {
-      //    method: 'PATCH',
-      //    body: post.value
-      // })
+      const data = await $fetch(`/api/posts/${id}`, {
+         method: 'PATCH',
+         body: post.value
+      })
 
-      // router.push('/posts')
+      router.push(`/posts/${id}`)
    } catch (err: any) {
       console.warn(err)
    }

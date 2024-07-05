@@ -27,7 +27,7 @@
                hover:border-black transition-colors mx-auto rounded-md first-letter:capitalize grid">
                   <p class="self-start">{{ post.title }}</p>
                   <div class="overflow-hidden aspect-square w-full self-end">
-                     <img v-loader="post.thumbnail" class="w-full h-full object-cover" v-if="post.thumbnail">
+                     <img :src="post.thumbnail" loading="lazy" class="w-full h-full object-cover" v-if="post.thumbnail">
                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-full h-full align-middle" width="32"
                         height="32" viewBox="0 0 32 32">
                         <path fill="currentColor"
@@ -44,7 +44,7 @@
       <div v-else class="w-full grid grid-cols-2 md:grid-cols-4 px-4 gap-4">
          <div v-for="post in 12" :key="post" class="grid justify-items-center w-full">
             <button type="button" class="font-bold self-start flex justify-center items-center gap-1 mb-5">
-               <img class="size-5 animate-spin" src="/loader.svg" alt="loading..">
+               <img class="size-5 animate-spin" src="/loader.svg">
             </button>
             <div class="w-9/12 h-8 mx-auto mb-4 bg-slate-500 rounded-md animate-pulse"></div>
             <div class="w-11/12 h-8 mx-auto mb-4 bg-slate-500 rounded-md animate-pulse"></div>

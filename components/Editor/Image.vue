@@ -1,6 +1,6 @@
 <template>
    <div>
-      <img v-loader="block.file.url" :alt="block.caption" :title="block.caption" class="border-orange-400"
+      <img :src="block.file.url" :alt="block.caption" :title="block.caption" class="border-orange-400"
          :class="imageProps" />
    </div>
 </template>

@@ -10,6 +10,7 @@
             Role: {{ currentUser.role }}
          </p>
       </div>
+      <ClientOnly><img src="/test.jpg" v-loader></ClientOnly>
    </div>
 </template>
 

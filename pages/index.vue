@@ -10,8 +10,10 @@
             Role: {{ currentUser.role }}
          </p>
       </div>
-      <NuxtImg src="https://images.unsplash.com/photo-1546083381-2bed38b42cac" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" />
-      <NuxtImg src="https://royalkingdomofmc.com/wp-content/themes/royal/img/about-bg.jpg" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" />
+      <NuxtImg src="https://images.unsplash.com/photo-1546083381-2bed38b42cac" placeholder="/loader.svg"
+         placeholder-class="nuxtImage-loading" />
+      <NuxtImg src="https://royalkingdomofmc.com/wp-content/themes/royal/img/about-bg.jpg" placeholder="/loader.svg"
+         placeholder-class="nuxtImage-loading" loading="lazy" />
    </div>
 </template>
 

@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import EditorJS, { type OutputBlockData, type OutputData } from '@editorjs/editorjs'
+import EditorJS, { type OutputData } from '@editorjs/editorjs'
 import Header from '@editorjs/header'
 import List from '@editorjs/list'
 import Embed from '@editorjs/embed'
@@ -22,31 +22,48 @@ const { data } = defineProps<{
    data?: OutputData | null
 }>()
 
-const uploadByFile = (file: File) => {
-   const preview = URL.createObjectURL(file)
-   const isAllowedSize = file.size <= 1024 * 1024 * 3 // 3 Mb
-
-   if (!isAllowedSize) return new Promise(resolve => resolve({
-      success: 0
-   }))
-
-   return new Promise(resolve => resolve({
-      success: 1,
-      file: {
-         url: preview,
-         file
-      }
-   }))
-}
-
-const imagesToRemove = ref<string[]>([])
 class MyImage extends Image {
    constructor(EditorJSInstance: any) {
       super(EditorJSInstance)
    }
 
-   removed() {
-      imagesToRemove.value.push(this._data.file.url)
+   async removed() {
+      if (this._data.file.url === undefined) return
+
+      try {
+         await $fetch('/api/images/remove', {
+            method: 'DELETE',
+            body: [this._data.file.url]
+         })
+      } catch (error: any) {
+         console.error(error)
+      }
+   }
+}
+
+const uploadByFile = async (file: File) => {
+   const isAllowedSize = file.size <= 1024 * 1024 * 3 // 3 Mb
+   if (!isAllowedSize) {
+      return {
+         success: 0
+      }
+   }
+
+   const body = new FormData()
+   body.append('images', file)
+   try {
+      const urls = await $fetch('/api/images/upload', {
+         method: 'POST',
+         body
+      })
+      return {
+         success: 1,
+         file: {
+            url: urls[0],
+         }
+      }
+   } catch (err: any) {
+      console.error(err)
    }
 }
 
@@ -139,99 +156,20 @@ onMounted(() => {
       onReady: async () => {
          new DragAndDrop(editor.value)
 
-         if (data) await render(data)
+         if (data && data.blocks.length) await render(data)
       }
    })
 })
-
-const uploadImages = async (editorOutput: OutputBlockData['data'], images: File[]) => {
-   const body = new FormData()
-   for (const image of images) {
-      body.append('images', image)
-   }
-
-   try {
-      const urls = await $fetch('/api/images/upload', {
-         method: 'POST',
-         body
-      })
-      await findImages(editorOutput, true, urls)
-   } catch (err: any) {
-      console.error(err)
-   }
-}
-
-const findImages = async (editorOutput: OutputBlockData['data'], replace: boolean = false, urls: string[] = []) => {
-   if (replace && !urls.length) return
-
-   let toUpload: File[] = []
-   let count: number = 0
-   for (const { data, type } of editorOutput.blocks) {
-      if (type === 'columns') {
-         for (const { blocks: colBlocks } of data.cols) {
-            for (const { data: colData, type: colType } of colBlocks) {
-               if (colType !== 'image') continue
-
-               if (!replace) {
-                  if (colData.file.url.startsWith('blob:'))
-                     toUpload.push(colData.file.file)
-                  continue
-               }
-
-               if (!colData.file.url.startsWith('blob:')) continue
-
-               colData.file.url = urls[count]
-               delete colData.file.file
-               count++
-            }
-         }
-      }
-      if (type !== 'image') continue
-
-      if (!replace) {
-         if (data.file.url.startsWith('blob:'))
-            toUpload.push(data.file.file)
-         continue
-      }
-
-      if (!data.file.url.startsWith('blob:')) continue
-
-      data.file.url = urls[count]
-      delete data.file.file
-      count++
-   };
-
-   if (replace) return
-
-   if (toUpload.length) await uploadImages(editorOutput, toUpload)
-}
-
-const removeImagesFromServer = async (images: string[]) => {
-   await $fetch('/api/images/remove', {
-      method: 'DELETE',
-      body: images
-   })
-}
 
 const render = async (data: OutputData) => await editor.value?.render(data)
 
 const save = async (): Promise<OutputData> => {
    const editorOutput = await editor.value!.save()
 
-   await findImages(editorOutput)
-
-   if (imagesToRemove.value.length) {
-      try {
-         await removeImagesFromServer(imagesToRemove.value)
-      } catch (err: any) {
-         console.error(err)
-      }
-   }
-
    return editorOutput
 }
 
-defineExpose({ save, imagesToRemove })
+defineExpose({ save })
 </script>
 
 <style scoped lang="postcss">

@@ -20,14 +20,16 @@
                      </svg>
                   </template>
                   <template v-else>
-                     <img class="size-5 animate-spin" src="/loader.svg" alt="loading..">
+                     <img class="size-5 animate-spin" src="/loader.svg">
                   </template>
                </button>
                <NuxtLink :to="`/posts/${post.id}`" class="w-full text-xl font-bold font-mono hover:bg-white hover:text-black
                hover:border-black transition-colors mx-auto rounded-md first-letter:capitalize grid">
                   <p class="self-start">{{ post.title }}</p>
                   <div class="overflow-hidden aspect-square w-full self-end">
-                     <NuxtImg :src="post.thumbnail" loading="lazy" placeholder="/loader.svg" placeholder-class="nuxtImage-loading" class="w-full h-full object-cover" v-if="post.thumbnail" />
+                     <NuxtImg :src="post.thumbnail" loading="lazy" placeholder="/loader.svg"
+                        placeholder-class="nuxtImage-loading" class="w-full h-full object-cover" v-if="post.thumbnail"
+                        :alt="post.title" />
                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-full h-full align-middle" width="32"
                         height="32" viewBox="0 0 32 32">
                         <path fill="currentColor"

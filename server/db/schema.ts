@@ -19,7 +19,7 @@ export const posts = pgTable('posts', {
    id: serial('id').primaryKey(),
    title: text('title').notNull(),
    content: json('content').$type<OutputData>(),
-   gallery: json('gallery').$type<string[]>(),
+   gallery: json('gallery').$type<Gallery>(),
    thumbnail: varchar('thumbnail', { length: 256 }),
    createdAt: timestamp('createdAt').notNull().defaultNow()
 });
@@ -28,6 +28,7 @@ export const posts = pgTable('posts', {
 export type Post = typeof posts.$inferSelect & { likes?: number, isLiked?: boolean }; // return type when queried
 export type PostList = Omit<Post, 'content' | 'createdAt'>[]
 export type NewPost = typeof posts.$inferInsert; // insert type
+export type Gallery = { path: string, alt?: string }[]
 export type PostColumns = typeof posts._.columns;
 
 

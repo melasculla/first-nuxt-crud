@@ -11,7 +11,7 @@ export default defineEventHandler(async event => {
       if (!isAllowedSize) continue
 
       try {
-         const { url } = await put('images/' + filename!, data, { access: 'public' })
+         const { url } = await put('images/' + filename!, data, { access: 'public', addRandomSuffix: false })
          result.push(url)
       } catch (error: any) {
          throw createError({ statusCode: error.status, statusMessage: error.message })

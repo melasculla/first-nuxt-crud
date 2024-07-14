@@ -15,7 +15,7 @@
          <transition-group name="list">
             <div v-for="file, i in images" :key="i" class="grid justify-items-center content-between group relative">
                <input v-if="multiple" v-model="file.alt" placeholder="Enter Image Description"
-                  class="w-11/12 bg-white px-1 py-2 rounded-md leading-none text-base absolute bottom-2 opacity-0 transition-opacity group-hover:opacity-100 z-10" />
+                  class="w-11/12 bg-white px-1 p   y-2 rounded-md leading-none text-base absolute bottom-2 opacity-0 transition-opacity group-hover:opacity-100 z-10" />
                <div class="w-full relative group" :class="multiple ? `h-[300px]` : `max-w-[400px]`">
                   <button type="button"
                      class="absolute right-2 top-2 rounded-full bg-white/60 p-2 opacity-0 text-red-600 transition-opacity group-hover:opacity-100"

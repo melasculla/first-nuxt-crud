@@ -19,6 +19,10 @@ export default defineNuxtConfig({
         host: process.env.NUXT_REDIS_HOST,
         port: process.env.NUXT_REDIS_PORT,
         password: process.env.NUXT_REDIS_PASSWORD
+      },
+      images: {
+        driver: 'fs',
+        base: './images'
       }
     },
     experimental: {

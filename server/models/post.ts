@@ -4,8 +4,9 @@ export const postModel = () => {
   const getPosts = async (): Promise<PostList> => {
     const postsList = await db.query.posts.findMany({
       columns: {
-        content: false,
-        createdAt: false
+        id: true,
+        title: true,
+        thumbnail: true
       },
       orderBy: (posts, { desc }) => [ desc(posts.createdAt) ]
     })

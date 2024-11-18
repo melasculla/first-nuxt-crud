@@ -1,10 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
+    public: {
+      test: ''
+    },
     postgreSqlUrl: "",
     accessJwtSecret: "",
     refreshJwtSecret: "",
-    redisPassword: ""
   },
   nitro: {
     imports: {
@@ -15,10 +17,11 @@ export default defineNuxtConfig({
     },
     storage: {
       redis: {
-        driver: "redis",
-        host: process.env.NUXT_REDIS_HOST,
-        port: process.env.NUXT_REDIS_PORT,
-        password: process.env.NUXT_REDIS_PASSWORD
+        driver: 'redis',
+        user: '',
+        host: process.env.NUXT_REDIS_HOST ?? 'redis.my',
+        port: process.env.NUXT_REDIS_PORT ?? 6379,
+        password: process.env.NUXT_REDIS_PASSWORD ?? 'test'
       },
       images: {
         driver: 'fs',

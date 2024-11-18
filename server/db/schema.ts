@@ -26,7 +26,7 @@ export const posts = pgTable('posts', {
 
 
 export type Post = typeof posts.$inferSelect & { likes?: number, isLiked?: boolean }; // return type when queried
-export type PostList = Omit<Post, 'content' | 'createdAt'>[]
+export type PostList = Omit<Post, 'content' | 'gallery' | 'createdAt'>[]
 export type NewPost = typeof posts.$inferInsert; // insert type
 export type Gallery = { path: string, alt?: string }[]
 export type PostColumns = typeof posts._.columns;

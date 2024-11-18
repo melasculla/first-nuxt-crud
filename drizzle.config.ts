@@ -5,6 +5,6 @@ export default defineConfig({
   out: './migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.NUXT_POSTGRE_SQL_URL!
-  },
+    url: process.env.NUXT_POSTGRE_SQL_URL ?? 'postgres://test:test@db.my:5432/test'
+  }
 });
